@@ -14,7 +14,7 @@ $ nano .env
 ## Iniciar
 
 ```bash
-$ docker compose up -d prod
+$ docker compose up -d
 ```
 
 _Quitando la opción *-d* se ven los logs del contenedor._
