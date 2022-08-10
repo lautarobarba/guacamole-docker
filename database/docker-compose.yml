@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  prod:
+    container_name: ${CONTAINER_NAME}
+    image: mysql:8.0
+    env_file: .env
+    environment:
+      - TZ=America/Argentina/Buenos_Aires
+    restart: always
+    ports:
+      - ${DB_PORT}:3306
+    volumes:
+      - ./database/data:/var/lib/mysql
+      - ./backups:/backups
+    extra_hosts:
+      - host.docker.internal:host-gateway

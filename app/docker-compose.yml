@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  backend:
+    container_name: ${CONTAINER_NAME}-backend
+    image: "guacamole/guacd:1.4.0"
+    mem_limit: 4000m
+    cpus: 4
+    env_file: .env
+    restart: always
+    volumes:
+      - "./drive:/drive:rw"
+      - "./record:/record:rw"
+    ports:
+      - ${BACK_PORT}:4822
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  frontend:
+    container_name: ${CONTAINER_NAME}-frontend
+    image: "guacamole/guacamole:1.4.0"
+    mem_limit: 4000m
+    cpus: 4
+    env_file: .env
+    environment:
+      - GUACD_HOSTNAME=host.docker.internal
+      - GUACD_PORT=${BACK_PORT}
+      - MYSQL_HOSTNAME=${MYSQL_HOSTNAME}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    restart: always
+    ports:
+      - ${FRONT_PORT}:8080
+    depends_on:
+      - backend
+    extra_hosts:
+      - host.docker.internal:host-gateway
