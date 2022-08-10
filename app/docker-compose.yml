@@ -30,6 +30,8 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     restart: always
+    volumes:
+      - "./images:/root/tomcat/webapps/guacamole/images"
     ports:
       - ${FRONT_PORT}:8080
     depends_on:
