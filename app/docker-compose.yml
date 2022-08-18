@@ -24,7 +24,7 @@ services:
     environment:
       - GUACD_HOSTNAME=host.docker.internal
       - GUACD_PORT=${BACK_PORT}
-      - MYSQL_HOSTNAME=${MYSQL_HOSTNAME}
+      - MYSQL_HOSTNAME=host.docker.internal
       - MYSQL_PORT=${MYSQL_PORT}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
