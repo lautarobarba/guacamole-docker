@@ -22,7 +22,7 @@ Para inicializar la base de datos por primera vez tenemos que ejecutar el script
 ```bash
 $ sudo rm -rf database
 $ docker compose up -d prod
-$ docker container exec -it CONTAINER_NAME bash
+$ docker compose exec -it prod bash
 root@container:$ mysql -p ${MYSQL_DATABASE} < /backups/initdb.sql
 root@container:$ # MYSQL_ROOT_PASSWORD
 root@container:$ exit
