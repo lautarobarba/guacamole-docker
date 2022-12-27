@@ -2,7 +2,7 @@
 
 ## Dependencias
 
-- Docker
+- Docker (Apéndice)
 
 ## Configuración
 
@@ -48,12 +48,19 @@ $ docker compose down
 
 Toda la base de datos queda guardada en **/database/data**
 
-Para conectarse a una terminal del contenedor (sólo para debug)
+Para conectarse a una terminal del contenedor (sólo para debug).
+Usar los datos configurados previamente en **.env**.
 
-**CONTAINER_NAME**: está en el archivo _.env_
+**MYSQL_USER**: está en el archivo _.env_
+
+**MYSQL_DATABASE**: está en el archivo _.env_
+
+**MYSQL_PASSWORD**: está en el archivo _.env_
 
 ```bash
-$ docker container exec -it CONTAINER_NAME bash
+$ docker compose exec -it prod bash
+root@container:$ mysql -U ${MYSQL_USER} ${MYSQL_DATABASE}
+Enter password: # MYSQL_PASSWORD
 ```
 
 ## Backups
@@ -65,16 +72,14 @@ Se creó un volumen para guardar los _backups_ en **/backups**.
 Para hacer el backup tenemos que entrar a una shell del contenedor y generar el archivo de backup en la carpeta donde esta montado el volumen.
 Usar los datos configurados previamente en **.env**.
 
-**CONTAINER_NAME**: está en el archivo _.env_
-
 **MYSQL_DATABASE**: está en el archivo _.env_
 
-**MYSQL_ROOT_PASSWORD**: está en el archivo _.env_
+**MYSQL_PASSWORD**: está en el archivo _.env_
 
 ```bash
-$ docker container exec -it CONTAINER_NAME bash
+$ docker compose exec -it prod bash
 root@container:$ mysqldump -p ${MYSQL_DATABASE} > /backups/${MYSQL_DATABASE}$(date "+%Y%m%d-%H_%M")hs.sql
-root@container:$ # MYSQL_ROOT_PASSWORD
+Enter password: # MYSQL_PASSWORD
 root@container:$ exit
 ```
 
@@ -89,18 +94,12 @@ Para restaurar el backup tenemos que entrar a una shell del contenedor y restaur
 **MYSQL_ROOT_PASSWORD**: está en el archivo _.env_
 
 ```bash
-$ # Descomprimo el backup
 $ cd backups
 $ sudo unzip NOMBRE_BACKUP.zip
 $ cd ..
-$ # Elimino la base datos que existe actualmente
-$ docker compose down
-$ sudo rm -rf database
-$ docker compose up -d prod
-$ # Levanto el backup
-$ docker container exec -it CONTAINER_NAME bash
+$ docker compose exec -it prod bash
 root@container:$ mysql -p ${MYSQL_DATABASE} < /backups/NOMBRE_BACKUP.sql
-root@container:$ # MYSQL_ROOT_PASSWORD
+Enter password: # MYSQL_PASSWORD
 root@container:$ exit
 ```
 
@@ -137,4 +136,30 @@ root$ # En cron:
 
 			# Para dejar el backup 1 vez por dia
 			0 0 * * * /ruta_al_script/backup_cron.sh
+```
+
+# Apéndice
+
+## Instalación de docker en ubuntu 18.04/20.04/22.04
+
+Fuente: [Instalación docker ubuntu](https://docs.docker.com/engine/install/ubuntu).
+
+```bash
+$ sudo apt-get update
+$ sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+$ sudo mkdir -p /etc/apt/keyrings
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+$  echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+$ sudo apt-get update
+$ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
 ```
