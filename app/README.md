@@ -11,6 +11,14 @@ $ cp .env.example .env
 $ nano .env
 ```
 
+## Inicializar Aplicación (1° vez)
+
+Las credenciales del administrador creado por defecto:
+```
+Usuario: guacadmin
+Contraseña: guacadmin
+```
+
 ## Iniciar
 
 ```bash
