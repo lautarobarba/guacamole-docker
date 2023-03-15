@@ -5,7 +5,7 @@ services:
     container_name: ${CONTAINER_NAME}-backend
     image: "guacamole/guacd:1.4.0"
     mem_limit: 4000m
-    cpus: 4
+    cpus: 2
     env_file: .env
     restart: always
     volumes:
@@ -20,7 +20,7 @@ services:
     container_name: ${CONTAINER_NAME}-frontend
     image: "guacamole/guacamole:1.4.0"
     mem_limit: 4000m
-    cpus: 4
+    cpus: 2
     env_file: .env
     environment:
       - GUACD_HOSTNAME=host.docker.internal
