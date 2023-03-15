@@ -3,6 +3,7 @@
 
 # Volumenes de docker
 database
+backups
 
 # Logs
 backup.log
